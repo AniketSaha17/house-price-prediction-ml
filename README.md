@@ -35,3 +35,19 @@ Longitude
 ## Conclusion
 Random Forest significantly outperformed Linear Regression, indicating non-linear relationships in the dataset.
 
+
+
+## ▶️ Run the project locally
+
+### 1️⃣ Install dependencies
+```
+pip install -r requirements.txt
+```
+### 2️⃣ Train the model
+```
+python src/train_model.py
+```
+### 3️⃣ Run the Streamlit app
+```
+streamlit run app/streamlit_app.py
+```
