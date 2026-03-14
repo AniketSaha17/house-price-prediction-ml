@@ -67,6 +67,16 @@ if st.button("Predict Price"):
 
     st.success(f"💰 Predicted House Value: ${prediction[0]*100000:,.0f}")
 
+# Map Visualization
+
+st.subheader("Location Visualization")
+
+map_df = pd.DataFrame({
+    "lat":[Latitude],
+    "lon":[Longitude]
+})
+
+st.map(map_df)
 
 # Feature Importance
 st.subheader("Model Feature Importance")
@@ -87,3 +97,50 @@ fig,ax = plt.subplots()
 ax.barh(df["Feature"],df["Importance"])
 ax.set_title("Feature Importance")
 st.pyplot(fig)
+
+
+# Model Evaluation - Performance Metrics
+
+from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.datasets import fetch_california_housing
+
+housing = fetch_california_housing(as_frame=True)
+df_eval = housing.frame
+
+X_eval = df_eval.drop("MedHouseVal", axis=1)
+y_eval = df_eval["MedHouseVal"]
+
+preds = model.predict(X_eval)
+
+r2 = r2_score(y_eval, preds)
+mse = mean_squared_error(y_eval, preds)
+
+st.subheader("Model Performance")
+
+col1, col2 = st.columns(2)
+
+col1.metric("R² Score", f"{r2:.2f}")
+col2.metric("Mean Squared Error", f"{mse:.2f}")
+
+
+# Dataset Preview
+
+st.subheader("Dataset Preview")
+
+from sklearn.datasets import fetch_california_housing
+
+housing = fetch_california_housing(as_frame=True)
+df_data = housing.frame
+
+st.dataframe(df_data.head())
+
+
+# Correlation Heatmap
+
+import seaborn as sns
+
+st.subheader("Feature Correlation")
+
+fig2, ax2 = plt.subplots()
+sns.heatmap(df_data.corr(), annot=True, cmap="coolwarm", ax=ax2)
+st.pyplot(fig2)
