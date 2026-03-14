@@ -5,7 +5,32 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load model
-model = pickle.load(open("model/house_price_model.pkl","rb"))
+
+import os
+from sklearn.datasets import fetch_california_housing
+from sklearn.ensemble import RandomForestRegressor
+
+model_path = "model/house_price_model.pkl"
+
+# Check if model exists
+if os.path.exists(model_path):
+    model = pickle.load(open(model_path, "rb"))
+
+else:
+    # Train model automatically
+    housing = fetch_california_housing(as_frame=True)
+    df = housing.frame
+
+    X = df.drop("MedHouseVal", axis=1)
+    y = df["MedHouseVal"]
+
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(X, y)
+
+    os.makedirs("model", exist_ok=True)
+
+    with open(model_path, "wb") as f:
+        pickle.dump(model, f)
 
 st.set_page_config(page_title="House Price Predictor", layout="wide")
 
